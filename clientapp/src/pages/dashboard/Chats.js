@@ -96,7 +96,7 @@ const ChatElement = ({ id, name, img, msg, time, unread, online }) => {
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: 20,
-  backgroundColor: alpha(theme.palette.background.default, 1),
+  backgroundColor: alpha(theme.palette.background.paper, 1),
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
@@ -133,7 +133,7 @@ const Chats = () => {
         backgroundColor:
           theme.palette.mode === "light"
             ? "#F8FAFF"
-            : theme.palette.background.paper,
+            : theme.palette.background.default,
         boxShadow: "0px 0px 2px rgba(0, 0, 0,0.25)",
       }}
     >

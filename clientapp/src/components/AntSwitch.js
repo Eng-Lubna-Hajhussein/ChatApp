@@ -10,9 +10,6 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
     "& .MuiSwitch-thumb": {
       width: 15,
     },
-    "& .MuiSwitch-switchBase.Mui-checked": {
-      transform: "translateX(9px)",
-    },
   },
   "& .MuiSwitch-switchBase": {
     padding: 2,
