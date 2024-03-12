@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,9 +14,11 @@ import {
 import { RHFTextField } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const LoginSchema = Yup.object().shape({
+  const RegisterSchema = Yup.object().shape({
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
     email: Yup.string()
       .required("Email is required")
       .email("Email must be a valid email address"),
@@ -25,12 +26,14 @@ const LoginForm = () => {
   });
 
   const defaultValues = {
+    firstName: "",
+    lastName: "",
     email: "demo@gmail.com",
     password: "demo1234",
   };
 
   const methods = useForm({
-    resolver: yupResolver(LoginSchema),
+    resolver: yupResolver(RegisterSchema),
     defaultValues,
   });
 
@@ -53,14 +56,17 @@ const LoginForm = () => {
       });
     }
   };
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && (
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
-        <RHFTextField name={"email"} label={"Email address"} />
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+          <RHFTextField name={"firstName"} label="First Name" />
+          <RHFTextField name={"lastName"} label="Last Name" />
+        </Stack>
+        <RHFTextField name={"email"} label="Email" />
         <RHFTextField
           name={"password"}
           label={"Password"}
@@ -79,18 +85,6 @@ const LoginForm = () => {
             ),
           }}
         />
-      </Stack>
-      <Stack alignItems={"flex-end "} sx={{ my: 2 }}>
-        <Link
-          component={RouterLink}
-          to="/auth/reset-password"
-          variant="body2"
-          color={"inherit"}
-          underline="always"
-        >
-          Forget Password
-        </Link>
-      </Stack>
       <Button
         fullWidth
         color="inherit"
@@ -108,10 +102,11 @@ const LoginForm = () => {
           },
         }}
       >
-        Login
+        Create Account
       </Button>
+      </Stack>
     </FormProvider>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
