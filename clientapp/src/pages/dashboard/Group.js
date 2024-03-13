@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import {
   Search,
   SearchIconWrapper,
@@ -17,9 +17,15 @@ import { useTheme } from "@mui/material/styles";
 import { SimpleBarStyle } from "../../components/Scrollbar";
 import { ChatList } from "../../data";
 import ChatElement from "../../components/ChatElement";
+import CreateGroup from "../../sections/main/CreateGroup";
 
 const Group = () => {
   const theme = useTheme();
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
   return (
     <>
       <Stack direction={"row"} sx={{ width: "100%" }}>
@@ -55,12 +61,15 @@ const Group = () => {
               <Typography variant="subtitle2" component={Link}>
                 Create New Group
               </Typography>
-              <IconButton>
+              <IconButton onClick={()=>setOpenDialog(true)}>
                 <Plus style={{ color: theme.palette.primary.main }} />
               </IconButton>
             </Stack>
             <Divider />
-            <Stack spacing={3} sx={{ flexGrow: 1, overflowY: "auto", height: "100%" }}>
+            <Stack
+              spacing={3}
+              sx={{ flexGrow: 1, overflowY: "auto", height: "100%" }}
+            >
               <SimpleBarStyle timeout={500} clickOnTrack={false}>
                 <Stack spacing={2.5}>
                   {/*  */}
@@ -95,8 +104,9 @@ const Group = () => {
           </Stack>
         </Box>
         {/* Right */}
-        {/* reuse conversation component */}
+        {/*TODO=> reuse conversation component */}
       </Stack>
+      {openDialog&&<CreateGroup open={openDialog} handleClose={handleCloseDialog} />}
     </>
   );
 };
