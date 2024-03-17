@@ -1,10 +1,15 @@
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Navigate, Link as RouterLink } from "react-router-dom";
 import { Link, Stack, Typography } from "@mui/material";
 import AuthSocial from "../../sections/auth/AuthSocial";
 import LoginForm from "../../sections/auth/LoginForm";
 
+const isAuthenticated = true;
+
 const Login = () => {
+  if(isAuthenticated){
+    return <Navigate to={"/app"} />
+  }
   return (
     <>
       <Stack spacing={2} sx={{ mb: 5, position: "relative" }}>

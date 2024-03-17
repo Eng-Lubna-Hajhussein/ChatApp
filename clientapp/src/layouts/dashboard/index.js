@@ -1,18 +1,15 @@
-import React, { useContext, useState } from "react";
-import { Outlet } from "react-router-dom";
-import { Avatar, Box, Divider, IconButton, Stack, Switch } from "@mui/material";
-import { styled, useTheme } from "@mui/material/styles";
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { Stack } from "@mui/material";
 
-
-import { Nav_Buttons } from "../../data";
-import { Gear } from "phosphor-react";
-import { faker } from "@faker-js/faker";
-import useSettings from "../../hooks/useSettings";
 import SideBar from "./SideBar";
 
-const DashboardLayout = () => {
-  const theme = useTheme();
+const isAuthenticated = true;
 
+const DashboardLayout = () => {
+  if(!isAuthenticated){
+    return <Navigate to={"/auth/login"} />
+  }
   return (
     <>
       <Stack direction={"row"}>
