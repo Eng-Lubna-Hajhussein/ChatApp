@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const otpGenerator = require("otp-generator");
 const crypto = require("crypto");
 
+const mailService = require("../services/mailer");
+
 const User = require("./../models/user");
 const filterObj = require("../utils/filterObj");
 const { promisify } = require("util");
@@ -50,7 +52,7 @@ exports.register = async (req, res, next) => {
 };
 
 //OTP:One-time passwords (OTPs) are widely used to verify user identities during online transactions
-exports.OTP = async (req, res, next) => {
+exports.sendOTP = async (req, res, next) => {
   const { userId } = req;
   const new_otp = otpGenerator.generate(6, {
     lowerCaseAlphabets: false,
@@ -64,6 +66,12 @@ exports.OTP = async (req, res, next) => {
   });
 
   // TODO Send Mail
+  mailService.sendEmail({
+    from:"contact@me.com",
+    to:"example@gmail.com",
+    subject:"OTP For Login",
+    text:`Your OTP is ${new_otp}. This is valid for 10 Mins.`
+  })
 
   res.status(200).json({
     status: "success",
@@ -144,33 +152,32 @@ exports.protect = async (req, res, next) => {
     token = req.cookies.jwt;
   } else {
     res.status(400).json({
-      status:"error",
-      message:"You are not logged In! Please log in to get access"
-    })
+      status: "error",
+      message: "You are not logged In! Please log in to get access",
+    });
     return;
   }
   //2)verification of token (if it is valid)
-  const decoded = await promisify(jwt.verify)(token,process.env.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   //3)Check if user still exist
   const this_user = await User.findById(decoded.userId);
-  if(!this_user){
+  if (!this_user) {
     res.status(400).json({
-      status:"error",
-      message:"The user doesn't exist"
-    })
+      status: "error",
+      message: "The user doesn't exist",
+    });
   }
   //4)check if user changed their password after token was issued
-  if(this_user.changedPasswordAfter(decoded.iat)){
+  if (this_user.changedPasswordAfter(decoded.iat)) {
     res.status(400).json({
-      status:"error",
-      message:"User recently updated password! Please log in again"
-    })
+      status: "error",
+      message: "User recently updated password! Please log in again",
+    });
   }
 
   //
   req.user = this_user;
   next();
-
 };
 
 //Types of routes=> protected (only logged in users can access these) & unProtected
